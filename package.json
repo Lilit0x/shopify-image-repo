@@ -1,0 +1,38 @@
+{
+  "name": "shopify-backend-challenge",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Solution to shopify backend challenge of building an image repository",
+  "main": "server.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node ./server.js",
+    "dev": "cross-env NODE_ENV=development nodemon --exec node ./server.js"
+  },
+  "keywords": [
+    "shopify",
+    "internship",
+    "2022"
+  ],
+  "author": "Abdulbaasit",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "cloudinary": "^1.27.0",
+    "config": "^3.3.6",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-async-handler": "^1.1.4",
+    "express-useragent": "^1.0.15",
+    "helmet": "^4.6.0",
+    "http-errors": "^1.8.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.0.6",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
