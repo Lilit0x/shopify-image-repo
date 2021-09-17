@@ -1,8 +1,8 @@
 {
     "mongoURL": "mongodb+srv://lilit:lilit@shopify-image-repo.rxmcl.mongodb.net/images?retryWrites=true&w=majority",
-    "cloud_name": "",
-    "cloudinary_api_key": "",
-    "cloudinary_api_secret": "",
+    "cloud_name": "shopify-challenge",
+    "cloudinary_api_key": "368355314316443",
+    "cloudinary_api_secret": "_ONMlti3k09CtxqACwtKzWOBwnc",
     "appName": "Shopify Image Repo Challenge",
     "siteURL": "http://localhost",
     "pathPrefix": "v1",

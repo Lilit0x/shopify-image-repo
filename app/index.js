@@ -5,6 +5,8 @@ import userAgent from 'express-useragent'
 import helmet from 'helmet'
 import morgan from 'morgan'
 
+import router from './router.js'
+
 const app = express()
 
 const middlewares = [
@@ -22,7 +24,7 @@ for (let i = 0; i < middlewares.length; i++) {
     }
 }
 
-// app.use(`/api/${config.get('pathPrefix')}${BASE_PATH}`, router)
+app.use(`/api/${config.get('pathPrefix')}`, router)
 app.use((error, req, res, next) => {
     // Sets HTTP status code
     res.status(error.status || 500)

@@ -21,3 +21,11 @@ const server = app.listen(port, async () => {
 		console.log(chalk.blue.bold("✗ Press CTRL-C to stop\n"))
 	}
 })
+
+// marketplace
+// add image to market place
+// buy from market place
+// upload image to be sold
+// handle inventory
+// negotiate price
+// search market place based on price, and other filters
