@@ -15,8 +15,11 @@ const imageSchema = new mongoose.Schema(
         type: mongoose.Types.ObjectId , ref: 'User'
    },
    price: Number,
-   discount: Number,
-   puchaseStatus: {
+   discount: {
+     type: Number,
+     default: 0
+   },
+   purchaseStatus: {
      type: String,
      enum: ['for sale', 'dispute', 'sold'],
      default: 'for sale'

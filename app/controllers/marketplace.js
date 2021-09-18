@@ -4,6 +4,7 @@ import createError from 'http-errors'
 import { createImage, findOneUser, createUser, findImage, updateUserById, findOneImage, findImageById, findUserById, updateImageById } from '../services.js'
 import cloudinary from '../config/cloudinary.js'
 import { successResponse } from '../utils/responses.js'
+import { calculateActualPrice } from '../utils/transactions.js'
 
 export const sellImage = asyncHandler( async(req, res) => {
     const { price, discount, userName } = req.body
@@ -31,28 +32,45 @@ export const getAllImagesForSale = asyncHandler( async(req, res) => { //add filt
 export const buyImage = asyncHandler( async(req, res) => {
     const { id } = req.params
     const { buyer_name } = req.query
+    if(!buyer_name) {
+        throw createError(401, 'Please add your name')
+    }
 
-    let buyer = findOneUser({ userName: buyer_name })
-    let image = findImageById(id).populate('owner')
+    let buyer = await findOneUser({ userName: buyer_name })
+    let image = await findOneImage({ _id: id }).populate('owner')
 
-    if(buyer && image && image.owner.toString() === buyer._id) {
+    if(buyer && image && image.owner._id.toString() === buyer._id.toString()) {
         throw createError(403, 'You already own this image')
-    } else if(!image) {
+    } else if(!image || image.purchaseStatus === 'sold' || image.purchaseStatus === 'dispute') {
         throw createError(404, `Oopsies, this image is not listed on the market place`)
     } else if(!buyer) {
         buyer = await createUser({ userName:  buyer_name })
+    }
+
+    const actualPrice = calculateActualPrice(image.price, image.discount)
+    if(actualPrice > buyer.accountBalance) {
+        throw createError(403, `Oooff, you don't have enough to buy this image.`)
     }
 
     let seller = image.owner
     image = await updateImageById(image._id, { owner: buyer._id, soldBy: seller._id, purchaseStatus: 'sold' }, { new: true })
     buyer = await updateUserById(
             buyer._id, 
-            { purchases: [...buyer.purchases, { item: image._id, seller: seller._id, purchaseDate: Date.now() }] }, 
-            // add selling price
+            { 
+                purchases: [...buyer.purchases, { item: image._id, seller: seller._id, purchaseDate: Date.now(), sellingPrice: actualPrice }],
+                $inc: { accountBalance: -actualPrice } 
+            }, 
             { new: true }
         )
-    seller.imagesForSale.filter( img => img._id === image._id)
-    seller = await updateUserById(seller._id, { imagesForSale: seller.imagesForSale }, { new: true })
+    seller = await updateUserById(
+            seller._id, 
+            { 
+                imagesForSale: [...seller.imagesForSale.filter( img => img.toString() !== image._id.toString())],
+                images: [...seller.images.filter( img => img.toString() !== image._id.toString())],
+                $inc: { accountBalance: actualPrice } 
+            },
+            { new: true }
+        )
 
     return res.status(200).json(successResponse({ image, seller, buyer }))
 })

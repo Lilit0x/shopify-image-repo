@@ -17,7 +17,11 @@ const userSchema = new mongoose.Schema(
         seller: String,
         purchaseDate: Date
       }
-    ]
+    ],
+    accountBalance: {
+      type: Number,
+      default: 200
+    }
   },
   {
     timestamps: true,

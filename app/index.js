@@ -6,6 +6,7 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 
 import router from './router.js'
+import upload from './config/multer.js'
 
 const app = express()
 
@@ -14,7 +15,8 @@ const middlewares = [
     helmet(),
     express.json(),
     userAgent.express(),
-    cors()
+    cors(),
+    upload.single('image')
 ]
 // Initialize the middlewares
 for (let i = 0; i < middlewares.length; i++) {
