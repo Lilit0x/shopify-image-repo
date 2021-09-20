@@ -8,6 +8,10 @@ import { calculateActualPrice } from '../utils/transactions.js'
 
 export const sellImage = asyncHandler( async(req, res) => {
     const { price, discount, userName } = req.body
+    if(!req.file) {
+        throw createError(403, 'Please add an image to be uploaded')
+    }
+
     let user = await findOneUser({ userName })
     if(!user) {
         user = await createUser({ userName })
